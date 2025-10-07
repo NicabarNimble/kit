@@ -1,5 +1,11 @@
 # @sveltejs/kit
 
+## 2.46.3
+### Patch Changes
+
+
+- fix: don't automatically reset form after an enhanced submission ([#14626](https://github.com/sveltejs/kit/pull/14626))
+
 ## 2.46.2
 ### Patch Changes
 
