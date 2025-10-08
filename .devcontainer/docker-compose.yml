@@ -19,6 +19,6 @@ services:
     - 8545:8545
     volumes:
     - ../:/workspace:cached
-    - /Users/nicabar/.patina/claude-linux:/root/.claude-linux:cached
-    - /Users/nicabar/.claude:/root/.claude-macos:ro
+    - ${HOME}/.patina/claude-linux:/root/.claude-linux:cached
+    - ${HOME}/.claude:/root/.claude-macos:ro
     working_dir: /workspace
