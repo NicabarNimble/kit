@@ -49,7 +49,32 @@ fi
 # Check Claude authentication
 echo ""
 echo "🤖 Checking Claude Code authentication..."
-if [ -f ~/.claude-linux/.credentials.json ]; then
+
+# If 1Password CLI is available, fetch credentials from vault
+if [ "${PATINA_USE_1PASSWORD}" = "1" ]; then
+    echo "🔐 Fetching credentials from 1Password vault..."
+
+    # Check if op CLI is available
+    if command -v op &> /dev/null; then
+        # Fetch credential from 1Password and save to tmpfs
+        if op document get "Patina Claude Max Subscription" --vault Private > ~/.claude-linux/.credentials.json 2>/dev/null; then
+            chmod 600 ~/.claude-linux/.credentials.json
+            echo "✅ Claude authenticated with Max subscription (from 1Password)"
+            echo "   🔒 Credentials in RAM-only storage (tmpfs)"
+            echo "   🔒 Credentials never touch disk"
+        else
+            echo "⚠️  Failed to fetch credentials from 1Password"
+            echo ""
+            echo "To fix:"
+            echo "  1. Ensure you're signed in: op signin"
+            echo "  2. Store credential: op document create ~/.patina/claude-linux/.credentials.json --title 'Patina Claude Max Subscription'"
+            echo ""
+        fi
+    else
+        echo "⚠️  1Password CLI not available in container"
+        echo "   Install op CLI: https://developer.1password.com/docs/cli/get-started/"
+    fi
+elif [ -f ~/.claude-linux/.credentials.json ]; then
     echo "✅ Claude already authenticated with Max subscription"
     echo "   Credentials shared from ~/.patina/claude-linux/"
 else
@@ -60,10 +85,10 @@ else
     echo "  2. Move credentials: mv ~/.claude/.credentials.json ~/.patina/claude-linux/"
     echo "  3. Credentials will work in ALL patina containers"
     echo ""
-    echo "After authentication, you can use:"
-    echo "  • claude 'task description' - for autonomous AI work"
-    echo "  • All changes stay isolated in this container"
-    echo "  • One login works across all projects"
+    echo "Or use 1Password for secure credential storage:"
+    echo "  1. Install op CLI: brew install --cask 1password-cli"
+    echo "  2. Store credential: op document create ~/.patina/claude-linux/.credentials.json --title 'Patina Claude Max Subscription'"
+    echo "  3. Regenerate devcontainer: patina yolo"
     echo ""
 fi
 
