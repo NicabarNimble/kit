@@ -1,0 +1,24 @@
+services:
+  workspace:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sleep infinity
+    environment:
+      AI_WORKSPACE: '1'
+      CLAUDE_CONFIG_DIR: /root/.claude-linux
+      IS_SANDBOX: '1'
+      PATINA_YOLO: '1'
+      SKIP_PERMISSIONS: '1'
+    ports:
+    - 3000:3000
+    - 3001:3001
+    - 3008:3008
+    - 8000:8000
+    - 8080:8080
+    - 8545:8545
+    volumes:
+    - ../:/workspace:cached
+    - /Users/nicabar/.patina/claude-linux:/root/.claude-linux:cached
+    - /Users/nicabar/.claude:/root/.claude-macos:ro
+    working_dir: /workspace
